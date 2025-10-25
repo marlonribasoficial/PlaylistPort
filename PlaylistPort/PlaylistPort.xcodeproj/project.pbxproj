@@ -29,9 +29,22 @@
 		7AEF79CE2EAD17760093F976 /* PlaylistPortUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlaylistPortUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7AD051AA2EAD18ED00B26257 /* Exceptions for "PlaylistPort" folder in "PlaylistPort" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7AEF79B62EAD17760093F976 /* PlaylistPort */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7AEF79B92EAD17760093F976 /* PlaylistPort */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7AD051AA2EAD18ED00B26257 /* Exceptions for "PlaylistPort" folder in "PlaylistPort" target */,
+			);
 			path = PlaylistPort;
 			sourceTree = "<group>";
 		};
@@ -400,6 +413,7 @@
 				DEVELOPMENT_TEAM = KH4Y5ANACG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PlaylistPort/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -410,7 +424,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = marlon.PlaylistPort;
+				PRODUCT_BUNDLE_IDENTIFIER = com.marlon.PlaylistPort;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -432,6 +446,7 @@
 				DEVELOPMENT_TEAM = KH4Y5ANACG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PlaylistPort/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -442,7 +457,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = marlon.PlaylistPort;
+				PRODUCT_BUNDLE_IDENTIFIER = com.marlon.PlaylistPort;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;

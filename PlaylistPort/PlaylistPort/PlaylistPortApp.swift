@@ -12,6 +12,9 @@ struct PlaylistPortApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onOpenURL { url in
+                    handleRedirectURL(url) // trata o retorno do Spotify
+                }
         }
     }
 }

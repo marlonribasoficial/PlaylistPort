@@ -50,5 +50,18 @@ func startAuthFlow() {
     
     guard let url = URL(string: authURLString) else { return }
 
-    UIApplication.shared.open(url) // ✅ isso abre o Safari
+    UIApplication.shared.open(url) // isso abre o Safari
+}
+
+func handleRedirectURL(_ url: URL) {
+    guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+          let code = components.queryItems?.first(where: { $0.name == "code" })?.value else {
+        print("Error: No code found in redirect URL")
+        return
+    }
+
+    print("Authorization Code: \(code)")
+    
+    // Aqui faremos o próximo passo:
+    // Trocar o code por um Access Token
 }

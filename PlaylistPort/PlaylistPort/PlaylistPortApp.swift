@@ -9,11 +9,13 @@ import SwiftUI
 
 @main
 struct PlaylistPortApp: App {
+    @StateObject private var viewModel = SpotifyViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: viewModel)
                 .onOpenURL { url in
-                    handleRedirectURL(url) // trata o retorno do Spotify
+                    viewModel.handleCallbackWithToken(url: url)
                 }
         }
     }

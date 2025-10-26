@@ -6,15 +6,20 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Playlist: Identifiable {
     let id: String
     let name: String
+    let description: String?
+    let ownerName: String?
     let imageURL: URL?
+    var totalTracks: Int
+    let isPublic: Bool
+    let primaryColor: Color?
+    var tracks: [Music]
     var isLikedSongs: Bool = false
-    var tracks: [Music] = []
 }
-
 
 struct Music: Identifiable {
     let id: String

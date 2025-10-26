@@ -33,7 +33,10 @@ struct URLToImageView: View {
                         .aspectRatio(contentMode: .fill)
                         .frame(width: width, height: width)
                         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-                    
+                        .overlay(
+                                RoundedRectangle(cornerRadius: cornerRadius)
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 0.5)
+                            )
                 case .failure:
                     placeholder
                 @unknown default:

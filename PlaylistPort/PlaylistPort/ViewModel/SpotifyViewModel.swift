@@ -7,65 +7,91 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class SpotifyViewModel: ObservableObject {
     @Published var playlists: [Playlist] = []
     @Published var accessToken: String?
 
-    // inicia login
+    // MARK: - Login
+
     func startLogin() {
         startAuthFlow()
     }
 
-    // lida com o callback do Spotify e atualiza ViewModel
     func handleCallbackWithToken(url: URL) {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let code = components.queryItems?.first(where: { $0.name == "code" })?.value else {
             print("No code found in redirect URL")
             return
         }
-        
-        print("Authorization Code: \(code)")
 
-        // chama a função do SpotifyAuth e recebe o token
         requestAccessToken(code: code) { token in
             self.accessToken = token
             self.fetchPlaylists()
         }
     }
 
-    // busca playlists usando o token
+    // MARK: - Playlists
+
     func fetchPlaylists() {
         guard let token = accessToken else { return }
-        
+
         fetchUserPlaylists(accessToken: token) { playlists in
             DispatchQueue.main.async {
                 self.playlists = playlists
-                self.addLikedSongsPlaylist()
+                // Depois de carregar playlists, já podemos buscar as tracks
+                self.loadAllPlaylistTracks()
             }
         }
     }
-    
-    func loadTracks(for playlist: Playlist) {
+
+    // Carrega tracks de todas as playlists
+    private func loadAllPlaylistTracks() {
         guard let token = accessToken else { return }
-        
-        fetchPlaylistTracks(accessToken: token, playlistID: playlist.id) { musics in
-            DispatchQueue.main.async {
-                if let index = self.playlists.firstIndex(where: { $0.id == playlist.id }) {
-                    self.playlists[index].tracks = musics
+
+        for index in playlists.indices {
+            let playlist = playlists[index]
+
+            if playlist.isLikedSongs {
+                fetchLikedSongs(accessToken: token) { tracks in
+                    DispatchQueue.main.async {
+                        self.playlists[index].tracks = tracks
+                        self.playlists[index].totalTracks = tracks.count
+                    }
+                }
+            } else {
+                fetchPlaylistTracks(accessToken: token, playlistID: playlist.id) { tracks in
+                    DispatchQueue.main.async {
+                        self.playlists[index].tracks = tracks
+                        self.playlists[index].totalTracks = tracks.count
+                    }
                 }
             }
         }
     }
-    
-    func addLikedSongsPlaylist() {
-        let likedPlaylist = Playlist(
-            id: "liked-songs",
-            name: "Liked Songs",
-            imageURL: nil,
-            isLikedSongs: true
-        )
 
-        playlists.insert(likedPlaylist, at: 0)
+    // MARK: - Carregamento de tracks de playlist específica
+
+    func loadTracks(for playlist: Playlist) {
+        guard let token = accessToken else { return }
+
+        if let index = playlists.firstIndex(where: { $0.id == playlist.id }) {
+            if playlist.isLikedSongs {
+                fetchLikedSongs(accessToken: token) { tracks in
+                    DispatchQueue.main.async {
+                        self.playlists[index].tracks = tracks
+                        self.playlists[index].totalTracks = tracks.count
+                    }
+                }
+            } else {
+                fetchPlaylistTracks(accessToken: token, playlistID: playlist.id) { tracks in
+                    DispatchQueue.main.async {
+                        self.playlists[index].tracks = tracks
+                        self.playlists[index].totalTracks = tracks.count
+                    }
+                }
+            }
+        }
     }
 }

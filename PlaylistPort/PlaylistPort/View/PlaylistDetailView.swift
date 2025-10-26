@@ -12,38 +12,35 @@ struct PlaylistDetailView: View {
     let playlist: Playlist
     
     var body: some View {
-        VStack {
-            URLToImageView(
-                coverURL: playlist.imageURL,
-                width: 200,
-                cornerRadius: 16
-            )
-            
-            Text(playlist.name)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
-            
-            List(playlist.tracks) { track in
-                HStack(spacing: 8) {
-                    URLToImageView(
-                        coverURL: track.imageURL,
-                        width: 50,
-                        cornerRadius: 6
-                    )
-                    
-                    VStack(alignment: .leading) {
-                        Text(track.title)
-                            .font(.headline)
-                        Text(track.artist)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+        Form {
+            Section {
+                PlaylistInfoView(playlist: playlist)
+            }
+            Section {
+                List(playlist.tracks) { track in
+                    HStack(spacing: 16) {
+                        URLToImageView(
+                            coverURL: track.imageURL,
+                            width: 50,
+                            cornerRadius: 6
+                        )
+                        
+                        VStack(alignment: .leading) {
+                            Text(track.title)
+                                .font(.headline)
+                            Text(track.artist)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
             }
         }
         .onAppear {
-            viewModel.loadTracks(for: playlist)
+            if !playlist.isLikedSongs && playlist.tracks.isEmpty {
+                viewModel.loadTracks(for: playlist)
+            }
         }
+        .background(playlist.primaryColor ?? Color.clear)
     }
 }

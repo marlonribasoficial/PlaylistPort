@@ -1,42 +1,27 @@
 //
-//  imageSongURL.swift
+//  URLToImageView.swift
 //  PlaylistPort
 //
-//  Created by Marlon Ribas on 25/10/25.
+//  Created by Marlon Ribas on 26/10/25.
 //
 
 import SwiftUI
 
-struct PlaylistCoverView: View {
+struct URLToImageView: View {
     var coverURL: URL?
     let width: CGFloat
     let cornerRadius: CGFloat
-    @Binding var preloadedImage: UIImage?
     
     init(coverURL: URL? = nil,
          width: CGFloat,
-         cornerRadius: CGFloat,
-         preloadedImage: Binding<UIImage?>? = nil)
-    {
+         cornerRadius: CGFloat) {
         self.coverURL = coverURL
         self.width = width
         self.cornerRadius = cornerRadius
-        
-        if let preloadedImage = preloadedImage {
-            self._preloadedImage = preloadedImage
-        } else {
-            self._preloadedImage = .constant(nil)
-        }
     }
     
     var body: some View {
-        if let image = preloadedImage {
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: width, height: width)
-                .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-        } else if let url = coverURL {
+        if let url = coverURL {
             AsyncImage(url: url) { phase in
                 switch phase {
                 case .empty:

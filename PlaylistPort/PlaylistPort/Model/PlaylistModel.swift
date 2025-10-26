@@ -7,14 +7,16 @@
 
 import Foundation
 
-struct Playlist: Identifiable, Codable {
+struct Playlist: Identifiable {
     let id: String
     let name: String
     let imageURL: URL?
-//    var tracks: [Track] = []
+    var isLikedSongs: Bool = false
+    var tracks: [Music] = []
 }
 
-struct Track: Identifiable, Codable {
+
+struct Music: Identifiable {
     let id: String
     let title: String
     let artist: String

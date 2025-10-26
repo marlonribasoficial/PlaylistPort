@@ -105,7 +105,6 @@ func requestAccessToken(code: String, completion: @escaping (String) -> Void) {
     }.resume()
 }
 
-
 func fetchUserPlaylists(accessToken: String, completion: @escaping ([Playlist]) -> Void) {
     let url = URL(string: "https://api.spotify.com/v1/me/playlists")!
     
@@ -135,20 +134,77 @@ func fetchUserPlaylists(accessToken: String, completion: @escaping ([Playlist]) 
                         return nil
                     }
                     
-                    // pega imagem se existir
                     let images = item["images"] as? [[String: Any]]
-                    let imageURLString = images?.first?["url"] as? String
-                    let imageURL = imageURLString != nil ? URL(string: imageURLString!) : nil
+                    let firstImageURL = (images?.first?["url"] as? String).flatMap { URL(string: $0) }
                     
-                    return Playlist(id: id, name: name, imageURL: imageURL)
+                    return Playlist(id: id, name: name, imageURL: firstImageURL)
                 }
-                
+
                 completion(playlists)
             } else {
                 completion([])
             }
         } catch {
-            print("Error parsing playlists response:", error)
+            print("Error parsing playlists:", error)
+            completion([])
+        }
+    }.resume()
+}
+
+func fetchPlaylistTracks(accessToken: String, playlistID: String, completion: @escaping ([Music]) -> Void) {
+    let url = URL(string: "https://api.spotify.com/v1/playlists/\(playlistID)/tracks")!
+    
+    var request = URLRequest(url: url)
+    request.httpMethod = "GET"
+    request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+    
+    URLSession.shared.dataTask(with: request) { data, response, error in
+        if let error = error {
+            print("Error fetching playlist tracks:", error)
+            completion([])
+            return
+        }
+        
+        guard let data = data else {
+            completion([])
+            return
+        }
+        
+        do {
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let items = json["items"] as? [[String: Any]] {
+
+                let musics: [Music] = items.compactMap { item in
+                    guard
+                        let track = item["track"] as? [String: Any],
+                        let id = track["id"] as? String,
+                        let name = track["name"] as? String,
+                        let artists = track["artists"] as? [[String: Any]],
+                        let firstArtist = artists.first,
+                        let artistName = firstArtist["name"] as? String
+                    else {
+                        return nil
+                    }
+
+                    let album = track["album"] as? [String: Any]
+                    let images = album?["images"] as? [[String: Any]]
+                    let firstImageURL = (images?.first?["url"] as? String)
+                        .flatMap { URL(string: $0) }
+
+                    return Music(
+                        id: id,
+                        title: name,
+                        artist: artistName,
+                        imageURL: firstImageURL
+                    )
+                }
+
+                completion(musics)
+            } else {
+                completion([])
+            }
+        } catch {
+            print("Error parsing tracks:", error)
             completion([])
         }
     }.resume()

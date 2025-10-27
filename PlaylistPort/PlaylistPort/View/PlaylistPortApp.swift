@@ -9,13 +9,14 @@ import SwiftUI
 
 @main
 struct PlaylistPortApp: App {
-    @StateObject private var viewModel = SpotifyViewModel()
+    @StateObject var viewModel = SpotifyViewModel()
 
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: viewModel)
+            ContentView()
+                .environmentObject(viewModel)
                 .onOpenURL { url in
-                    viewModel.handleCallbackWithToken(url: url)
+                    viewModel.handleSpotifyCallback(url: url)
                 }
         }
     }

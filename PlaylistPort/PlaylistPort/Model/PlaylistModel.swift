@@ -19,6 +19,7 @@ struct Playlist: Identifiable {
     let primaryColor: Color?
     var tracks: [Music]
     var isLikedSongs: Bool = false
+    var isLoadingTracks: Bool = false
 }
 
 struct Music: Identifiable {
